@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace library_management_system_htmx.Pages;
+namespace LibraryManagementSystemHtmx.Pages;
 
 public class PrivacyModel : PageModel
 {
