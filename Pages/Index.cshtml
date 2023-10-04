@@ -7,4 +7,21 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p id="counter">Counter: <span>0</span></p>
+
+    <div>
+        <form 
+            method="post"
+            hx-post="@Url.Page("", "Increment")"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-target="#counter"
+        >
+            <button
+                type="submit"
+            >
+                Increment
+            </button>
+        </form>
+    </div>
 </div>
