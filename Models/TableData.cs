@@ -1,0 +1,42 @@
+namespace LibraryManagementSystemHtmx.Models;
+
+public class TableData
+{
+  public List<string> Columns;
+  public IList<Row> Rows { get; set; }
+
+  public TableData(params string[] columnNames)
+  {
+    Columns = columnNames.ToList();
+    Rows = new List<Row>();
+  }
+
+  public IEnumerable<string> GetRowValues(int rowId)
+  {
+    var row = GetRowById(rowId);
+    if (row is null) return new List<string>();
+    
+    return Columns.Select(column => row.Value.GetType().GetProperty(column)!.GetValue(row.Value)!.ToString()!).ToList();
+  }
+
+  public void AddRow(int id, object value)
+  {
+    Rows.Add(
+      new Row(id, value) 
+    );
+  }
+
+  public void RemoveRow(int id)
+  {
+    var row = GetRowById(id);
+    
+    if (row is null) return;
+
+    Rows.Remove(row);
+  }
+
+  public Row? GetRowById(int id)
+  {
+    return Rows.FirstOrDefault(row => row.Id == id);
+  }
+}

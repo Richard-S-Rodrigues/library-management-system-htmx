@@ -1,0 +1,53 @@
+
+@model LibraryManagementSystemHtmx.Models.Book;
+
+<div class='modal-dialog modal-lg modal-dialog-centered' role='document'>
+    <div class='modal-content'>
+      <p>@Model.Id</p>
+      <p>@Model.Title</p>
+      <p>@Model.Description</p>
+    </div>
+</div>
+
+@* @model LibraryManagementSystemHtmx.Models.Book;
+
+@{
+  var id = $"book-{Model.Id}";
+}
+
+<tr id="@id">
+  <td>
+    <label asp-for="Title">Title</label>
+    <input class="input" type="text" asp-for="Title" />
+  </td>
+  <td>
+    <label asp-for="Description">Description</label>
+    <textarea class="input" asp-for="Description" />
+  </td>
+   <td class="has-text-right">
+      <button 
+        class="button is-success"
+        hx-post="@Url.Page("Index", "UpdateBook", new {Model.Id})"
+        hx-swap="outerHTML"
+        hx-target="closest tr"
+        hx-include="#@id input"
+      >
+        <span class="icon">
+            <i class="fa fa-save"></i>
+        </span>
+        <span>Save</span>
+      </button>
+      <button 
+        class="button is-warning"
+        hx-get="@Url.Page("Index", "Row", new {Model.Id})"
+        hx-swap="outerHTML"
+        hx-target="closest tr"
+      >
+        <span class="icon">
+            <i class="fa fa-exclamation-triangle"></i>
+        </span>
+        <span>Cancel</span>
+      </button>
+      @Html.AntiForgeryToken()
+    </td>
+</tr> *@

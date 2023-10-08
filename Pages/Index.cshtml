@@ -1,5 +1,7 @@
 ﻿@page
 @model IndexModel
+@using LibraryManagementSystemHtmx.Models
+
 @{
     ViewData["Title"] = "Home page";
 }
@@ -23,5 +25,9 @@
                 Increment
             </button>
         </form>
+    </div>
+
+    <div>
+        @await Html.PartialAsync("~/Pages/Shared/_Table.cshtml",  @Model.bookTable)
     </div>
 </div>
