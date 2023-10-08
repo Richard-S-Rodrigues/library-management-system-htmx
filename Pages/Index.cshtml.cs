@@ -92,4 +92,26 @@ public class IndexModel : PageModel
     {
         bookTable.RemoveRow(rowId);
     }
+
+    public IActionResult OnGetSearch(string searchQuery)
+    {
+        IList<Book> rows = bookTable.Rows.Select(row => (Book)row.Value).ToList(); 
+        var Results = string.IsNullOrEmpty(searchQuery) 
+            ? rows 
+            : rows.Where(
+                row => 
+                    row.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || 
+                    row.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)
+            ).ToList();
+
+        TableData updatedTable = bookTable;
+        updatedTable.RemoveAllRows();
+
+        foreach (var row in Results)
+        {
+            updatedTable.AddRow(row.Id, row);
+        }
+
+        return Partial("~/Pages/Shared/_Rows.cshtml", updatedTable);
+    }
 }

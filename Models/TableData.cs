@@ -4,11 +4,13 @@ public class TableData
 {
   public List<string> Columns;
   public IList<Row> Rows { get; set; }
+  public string SearchQuery { get; set; }
 
   public TableData(params string[] columnNames)
   {
     Columns = columnNames.ToList();
     Rows = new List<Row>();
+    SearchQuery = string.Empty;
   }
 
   public IEnumerable<string> GetRowValues(int rowId)
@@ -33,6 +35,11 @@ public class TableData
     if (row is null) return;
 
     Rows.Remove(row);
+  }
+
+  public void RemoveAllRows()
+  {
+    Rows.Clear();
   }
 
   public Row? GetRowById(int id)
