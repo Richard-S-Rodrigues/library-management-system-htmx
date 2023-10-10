@@ -1,7 +1,7 @@
 @model LibraryManagementSystemHtmx.Models.TableData;
 
 <div>
-  <div>
+  <div class="d-flex">
     <input
       type="text"
       asp-for="SearchQuery"
@@ -12,6 +12,16 @@
       class="form-control" 
       placeholder="Search"
     />
+    <button
+      hx-get="@Url.Page("", "OpenEditModal")" 
+      hx-target="#edit-modal" 
+      hx-trigger="click"
+      data-bs-toggle="modal"
+      data-bs-target="#edit-modal" 
+      class="btn btn-primary"
+    >
+        Add
+    </button>
   </div>
   <table class="table is-fullwidth table-bordered">
     <thead>
@@ -27,4 +37,16 @@
       @await Html.PartialAsync("~/Pages/Shared/_Rows.cshtml",  @Model)
     </tbody>
   </table>
+  <div 
+    id="edit-modal"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+        </div>
+    </div>
+  </div>
 </div>

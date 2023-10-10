@@ -7,7 +7,6 @@ namespace LibraryManagementSystemHtmx.Pages;
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-    private static int counter = 0;
     private IList<Book> _books;
     public IList<Book> books
     {
@@ -38,8 +37,6 @@ public class IndexModel : PageModel
             _books = value;
         }
     } 
-    
-   
 
     private TableData _bookTable;
     public TableData bookTable 
@@ -70,20 +67,19 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        counter = 0;
     }
 
-    public IActionResult OnPostIncrement()
-    {
-        return Content($"Counter: <span>{++counter}</span>"); 
-    }
-
-    public IActionResult OnGetOpenEditModal(int rowId)
-    {
-        var row = bookTable.GetRowById(rowId);
+    public IActionResult OnGetOpenEditModal(int? rowId)
+    {    
+        if (rowId is null)
+        {
+            return Partial("~/Pages/BookEdit.cshtml", new Book());
+        }
+        
+        var row = bookTable.GetRowById(rowId.Value);
         if (row is null)
         {
-            return Partial("~/Pages/BookEdit.cshtml", new Book()); 
+            return Partial("~/Pages/BookEdit.cshtml", new Book());
         }
         return Partial("~/Pages/BookEdit.cshtml", (Book)row.Value);
     }

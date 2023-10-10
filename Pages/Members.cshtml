@@ -1,0 +1,14 @@
+@page
+@model MembersModel
+@using LibraryManagementSystemHtmx.Models
+
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="text-center">
+  <h1 class="display-4">Members</h1>
+    <div>
+        @await Html.PartialAsync("~/Pages/Shared/_Table.cshtml",  @Model.memberTable)
+    </div>
+</div>

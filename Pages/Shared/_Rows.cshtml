@@ -20,10 +20,10 @@ else
         <div class="d-flex justify-content-end">
           <button
             hx-get="@Url.Page("", "OpenEditModal", new { rowId = row.Id })" 
-            hx-target="#modals-here" 
+            hx-target="#edit-modal" 
             hx-trigger="click"
             data-bs-toggle="modal"
-            data-bs-target="#modals-here"
+            data-bs-target="#edit-modal"
             class="btn btn-primary"
           >
             Edit
@@ -44,18 +44,6 @@ else
               Delete
             </button>
           </form>
-        </div>
-        <div 
-          id="modals-here"
-          class="modal modal-blur fade"
-          style="display: none"
-          aria-hidden="false"
-          tabindex="-1"
-        >
-          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-              <div class="modal-content">
-              </div>
-          </div>
         </div>
       </td>
     </tr>
