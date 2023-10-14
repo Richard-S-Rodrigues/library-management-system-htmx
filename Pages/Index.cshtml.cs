@@ -1,34 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LibraryManagementSystemHtmx.Models;
+using LibraryManagementSystemHtmx.Services.BookService;
 
 namespace LibraryManagementSystemHtmx.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-    private IList<Book> _books;
-    public IList<Book> books
+    IEnumerable<Book> mockBooks = new List<Book>() 
+    {
+        new() 
+        {
+            Id = 1,
+            Title = "Test title 1",
+            Description = "Test description 1"
+        },
+        new() 
+        {
+            Id = 2,
+            Title = "Test title 2",
+            Description = "Test description 2"
+        }
+    };
+    private readonly IBookService _bookService;
+    private IEnumerable<Book> _books;
+    public IEnumerable<Book> books
     {
         get 
         {
             if (_books == null)
             {
-                _books =  new List<Book>() 
-                {
-                    new() 
-                    {
-                        Id = 1,
-                        Title = "Test title 1",
-                        Description = "Test description 1"
-                    },
-                    new() 
-                    {
-                        Id = 2,
-                        Title = "Test title 2",
-                        Description = "Test description 2"
-                    }
-                };
+                _books =  mockBooks;
             }
             return _books;
         }
@@ -49,7 +51,7 @@ public class IndexModel : PageModel
 
                 foreach (var book in books)
                 {
-                    _bookTable.AddRow(book.Id, book);
+                    _bookTable.AddRow(book.Id!.Value, book);
                 }
             }
             return _bookTable;
@@ -60,13 +62,19 @@ public class IndexModel : PageModel
         }
     }
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(IBookService bookService)
     {
-        _logger = logger;
+        _bookService = bookService;
     }
 
-    public void OnGet()
+    public void SaveBook()
     {
+        
+    }
+
+    public async void OnGet()
+    {
+        _books = await _bookService.GetAll();
     }
 
     public IActionResult OnGetOpenEditModal(int? rowId)
@@ -105,7 +113,7 @@ public class IndexModel : PageModel
 
         foreach (var row in Results)
         {
-            updatedTable.AddRow(row.Id, row);
+            updatedTable.AddRow(row.Id!.Value, row);
         }
 
         return Partial("~/Pages/Shared/_Rows.cshtml", updatedTable);

@@ -46,7 +46,7 @@ public class MembersModel : PageModel
 
               foreach (var member in members)
               {
-                  _memberTable.AddRow(member.Id, member);
+                  _memberTable.AddRow(member.Id!.Value, member);
               }
           }
           return _memberTable;
@@ -100,7 +100,7 @@ public class MembersModel : PageModel
 
       foreach (var row in Results)
       {
-          updatedTable.AddRow(row.Id, row);
+          updatedTable.AddRow(row.Id!.Value, row);
       }
 
       return Partial("~/Pages/Shared/_Rows.cshtml", updatedTable);
