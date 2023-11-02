@@ -61,7 +61,7 @@ public class BookService : IBookService
     return result.FirstOrDefault()!;
   }
 
-  public async Task<IEnumerable<Book>> GetAll()
+  public async Task<IList<Book>> GetAll()
   {
     var result = await _dbAccess.GetData<Book, dynamic>
     (

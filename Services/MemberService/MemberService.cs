@@ -61,7 +61,7 @@ public class MemberService : IMemberService
     return result.FirstOrDefault()!;
   }
 
-  public async Task<IEnumerable<Member>> GetAll()
+  public async Task<IList<Member>> GetAll()
   {
     var result = await _dbAccess.GetData<Member, dynamic>
     (
