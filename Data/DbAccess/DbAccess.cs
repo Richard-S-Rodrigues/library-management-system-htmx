@@ -29,13 +29,11 @@ public class DbAccess: IDbAccess
   )
   {
     using var connection = new NpgsqlConnection(_config.GetConnectionString(connectionId));
-    await connection.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.Text);
+    storedProcedure += " RETURNING Id";
     
-    storedProcedure += "RETURNING Id";
-
     try
     {
-      int generatedId = connection.QuerySingle<int>(storedProcedure, parameters);
+      int generatedId = await connection.QuerySingleAsync<int>(storedProcedure, parameters);
       return generatedId;
     } 
     catch(InvalidOperationException ex)
