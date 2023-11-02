@@ -74,16 +74,22 @@ public class IndexModel : PageModel
         await OnGetAsync();
     }
 
-    public IActionResult OnGetSearch(string searchQuery)
+    public async Task<IActionResult> OnPostSearch(string searchQuery)
     {
+        await OnGetAsync();
+        if (string.IsNullOrEmpty(searchQuery))
+        {
+            return Partial("~/Pages/Shared/_Rows.cshtml", bookTable);
+        }
+
         IList<Book> rows = bookTable.Rows.Select(row => (Book)row.Value).ToList(); 
-        var Results = string.IsNullOrEmpty(searchQuery) 
-            ? rows 
-            : rows.Where(
-                row => 
-                    row.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || 
-                    row.Description!.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)
-            ).ToList();
+        var Results = rows.Where(
+            row => 
+                row.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                row.Isbn.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                row.Author.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || 
+                row.Description is not null && row.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) 
+        ).ToList();
 
         TableData updatedTable = bookTable;
         updatedTable.RemoveAllRows();

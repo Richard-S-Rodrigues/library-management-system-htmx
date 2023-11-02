@@ -5,7 +5,7 @@
     <input
       type="text"
       asp-for="SearchQuery"
-      hx-get="@Url.Page("", "Search")"
+      hx-post="@Url.Page("", "Search")"
       hx-target="#rows-content"
       hx-trigger="keyup changed delay:250ms"
       hx-boost="change"
