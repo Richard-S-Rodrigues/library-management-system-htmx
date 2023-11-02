@@ -1,26 +1,29 @@
-@model LibraryManagementSystemHtmx.Models.Book;
+@using Microsoft.AspNetCore.Mvc.ViewFeatures;
+@model LibraryManagementSystemHtmx.Pages.IndexModel;
 
 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
   <div class="modal-content p-3" style="text-align: left;">
     <form
       method="post"
-      asp-page-handler="OnPost"
+      asp-page="Index"
+      asp-page-handler="SaveBook"
     >
+      <input type="hidden" asp-for="currentSelectedBook.Id"></input>
       <div class="mb-3">
-        <label asp-for="Isbn" class="form-label">ISBN</label>
-        <input class="form-control" type="text" asp-for="Isbn" />
+        <label asp-for="currentSelectedBook.Isbn" class="form-label">ISBN</label>
+        <input class="form-control" type="text" asp-for="currentSelectedBook.Isbn" />
       </div>
       <div class="mb-3">
-        <label asp-for="Title" class="form-label">Title</label>
-        <input class="form-control" type="text" asp-for="Title" />
+        <label asp-for="currentSelectedBook.Title" class="form-label">Title</label>
+        <input class="form-control" type="text" asp-for="currentSelectedBook.Title" />
       </div>
       <div class="mb-3">
-        <label asp-for="Author" class="form-label">Author</label>
-        <input class="form-control" type="text" asp-for="Author" />
+        <label asp-for="currentSelectedBook.Author" class="form-label">Author</label>
+        <input class="form-control" type="text" asp-for="currentSelectedBook.Author" />
       </div>
       <div class="mb-3">
-        <label asp-for="Description" class="form-label">Description</label>
-        <textarea class="form-control" asp-for="Description"></textarea>
+        <label asp-for="currentSelectedBook.Description" class="form-label">Description</label>
+        <textarea class="form-control" asp-for="currentSelectedBook.Description"></textarea>
       </div>
       <button 
         type="submit" 

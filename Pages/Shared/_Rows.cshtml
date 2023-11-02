@@ -19,7 +19,7 @@ else
       <td class="has-text-right">
         <div class="d-flex justify-content-end">
           <button
-            hx-get="@Url.Page("", "OpenEditModal", new { rowId = row.Id })" 
+            hx-get="@Url.Page("", "OpenEditModal", new { id = row.Id })" 
             hx-target="#edit-modal" 
             hx-trigger="click"
             data-bs-toggle="modal"
