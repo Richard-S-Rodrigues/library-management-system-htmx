@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "book"(
   "isbn" text not null,
   "title" text not null,
   "author" text not null,
-  "description" text not null,
+  "description" text default null,
   "created_at" timestamp not null,
   "updated_at" timestamp not null
 );
