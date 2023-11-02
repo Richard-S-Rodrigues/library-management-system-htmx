@@ -18,7 +18,12 @@ public class TableData
     var row = GetRowById(rowId);
     if (row is null) return new List<string>();
     
-    return Columns.Select(column => row.Value.GetType().GetProperty(column)!.GetValue(row.Value)!.ToString()!).ToList();
+    return Columns.Select(column => {
+      var prop = row.Value.GetType().GetProperty(column);
+      var value = prop!.GetValue(row.Value);
+      if (value is null) return null;
+      return value.ToString();
+      }).ToList()!;
   }
 
   public void AddRow(int id, object value)
