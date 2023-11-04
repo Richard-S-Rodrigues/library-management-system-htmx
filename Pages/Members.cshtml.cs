@@ -1,108 +1,103 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LibraryManagementSystemHtmx.Models;
+using LibraryManagementSystemHtmx.Services.MemberService;
 
 namespace LibraryManagementSystemHtmx.Pages;
 
+[IgnoreAntiforgeryToken]
 public class MembersModel : PageModel
 {
-  private IList<Member> _members;
-  public IList<Member> members
-  {
-      get 
-      {
-          if (_members == null)
-          {
-              _members =  new List<Member>() 
-              {
-                  new() 
-                  {
-                      Id = 1,
-                      Name = "Member 1"
-                  },
-                  new() 
-                  {
-                      Id = 2,
-                      Name = "Member 2"
-                  }
-              };
-          }
-          return _members;
-      }
-      private set 
-      {
-          _members = value;
-      }
-  } 
-    
-  private TableData _memberTable;
-  public TableData memberTable 
-  {
-      get
-      {
-          if (_memberTable == null)
-          {
-              _memberTable = new TableData("Name");
+    private readonly IMemberService _memberService;
+    public IList<Member> Members { get; set; } = new List<Member>(); 
 
-              foreach (var member in members)
-              {
-                  _memberTable.AddRow(member.Id!.Value, member);
-              }
-          }
-          return _memberTable;
-      }
-      private set 
-      {
-          _memberTable = value;
-      }
-  }
+    public TableData MemberTable { get; set; } = new();
 
-  public MembersModel()
-  {
-  }
+    [BindProperty]
+    public Member CurrentSelectedMember { get; set; } = new();
 
-  public void OnGet()
-  {
-  }
+    public MembersModel(IMemberService memberService)
+    {
+        _memberService = memberService;
+    }
 
-  public IActionResult OnGetOpenEditModal(int? rowId)
-  {    
-      if (rowId is null)
-      {
-          return Partial("~/Pages/MemberEdit.cshtml", new Member());
-      }
-      
-      var row = memberTable.GetRowById(rowId.Value);
-      if (row is null)
-      {
-          return Partial("~/Pages/MemberEdit.cshtml", new Member());
-      }
-      return Partial("~/Pages/MemberEdit.cshtml", (Member)row.Value);
-  }
+    public async Task<IActionResult> OnPostSaveMember()
+    {
+        if (ModelState.IsValid)
+        {
+            if (CurrentSelectedMember.Id is null) 
+            { 
+                CurrentSelectedMember = await _memberService.Create(CurrentSelectedMember);
+            }
+            else 
+            {
+                await _memberService.Update(CurrentSelectedMember.Id.Value, CurrentSelectedMember);
+            }
+            
+            return RedirectToPage();
+        }
 
-  public void OnPostDeleteAction(int rowId)
-  {
-    memberTable.RemoveRow(rowId);
-  }
+        return Page();
+    }
 
-  public IActionResult OnGetSearch(string searchQuery)
-  {
-      IList<Member> rows = memberTable.Rows.Select(row => (Member)row.Value).ToList(); 
-      var Results = string.IsNullOrEmpty(searchQuery) 
-          ? rows 
-          : rows.Where(
-              row => 
-                  row.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) 
-          ).ToList();
+    public async Task OnGetAsync()
+    {
+        MemberTable = new TableData("Name", "Email", "Address", "MaxBookLimit");
+        Members = await _memberService.GetAll();
+        
+        foreach (var Member in Members)
+        {
+            MemberTable.AddRow(Member.Id!.Value, Member);
+        }
+    }
 
-      TableData updatedTable = memberTable;
-      updatedTable.RemoveAllRows();
+    public async Task<IActionResult> OnGetOpenEditModal(int? id)
+    {    
+        if (id is null)
+        {
+            return Partial("~/Pages/MemberEdit.cshtml", this);
+        }
+        
+        CurrentSelectedMember = await _memberService.Get(id.Value);
+        
+        if (CurrentSelectedMember is null)
+        {
+            return Partial("~/Pages/MemberEdit.cshtml", this);
+        }
 
-      foreach (var row in Results)
-      {
-          updatedTable.AddRow(row.Id!.Value, row);
-      }
+        return Partial("~/Pages/MemberEdit.cshtml", this);
+    }
 
-      return Partial("~/Pages/Shared/_Rows.cshtml", updatedTable);
-  }
+    public async Task OnPostDeleteAction(int rowId)
+    {
+        await _memberService.Delete(rowId);
+        await OnGetAsync();
+    }
+
+    public async Task<IActionResult> OnPostSearch(string searchQuery)
+    {
+        await OnGetAsync();
+        if (string.IsNullOrEmpty(searchQuery))
+        {
+            return Partial("~/Pages/Shared/_Rows.cshtml", MemberTable);
+        }
+
+        IList<Member> rows = MemberTable.Rows.Select(row => (Member)row.Value).ToList(); 
+        var Results = rows.Where(
+            row => 
+                row.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                row.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                row.Address.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)  
+        ).ToList();
+
+        TableData updatedTable = MemberTable;
+        updatedTable.RemoveAllRows();
+
+        foreach (var row in Results)
+        {
+            updatedTable.AddRow(row.Id!.Value, row);
+        }
+
+        return Partial("~/Pages/Shared/_Rows.cshtml", updatedTable);
+    }
 }

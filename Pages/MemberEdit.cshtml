@@ -1,14 +1,28 @@
-
-@model LibraryManagementSystemHtmx.Models.Member;
+@model LibraryManagementSystemHtmx.Pages.MembersModel
 
 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
   <div class="modal-content p-3" style="text-align: left;">
     <form
       method="post"
+      asp-page="Members"
+      asp-page-handler="SaveMember"
     >
+      <input type="hidden" asp-for="CurrentSelectedMember.Id"></input>
       <div class="mb-3">
-        <label asp-for="Name" class="form-label">Name</label>
-        <input class="form-control" type="text" asp-for="Name" />
+        <label asp-for="CurrentSelectedMember.Name" class="form-label">Name</label>
+        <input class="form-control" type="text" asp-for="CurrentSelectedMember.Name" />
+      </div>
+      <div class="mb-3">
+        <label asp-for="CurrentSelectedMember.Email" class="form-label">Email</label>
+        <input class="form-control" type="email" asp-for="CurrentSelectedMember.Email" />
+      </div>
+      <div class="mb-3">
+        <label asp-for="CurrentSelectedMember.Address" class="form-label">Address</label>
+        <input class="form-control" type="text" asp-for="CurrentSelectedMember.Address" />
+      </div>
+      <div class="mb-3">
+        <label asp-for="CurrentSelectedMember.MaxBookLimit" class="form-label">Max book limit</label>
+        <input class="form-control" type="number" asp-for="CurrentSelectedMember.MaxBookLimit" />
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
